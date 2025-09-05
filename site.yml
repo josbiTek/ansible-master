@@ -1,0 +1,28 @@
+- name: set up webservers
+  hosts: webservers
+  become: yes
+  pre_tasks:
+    - name: update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 0
+
+  tasks:
+    - name: Install Packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apache2
+        - php
+        - mysql-server
+
+    - name: start services
+      service:
+        name: "{{ item }}"
+        state: started
+      loop:
+        - apache2
+        - mysql
+
+    
